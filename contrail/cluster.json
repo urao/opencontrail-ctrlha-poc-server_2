@@ -1,0 +1,64 @@
+{
+    "cluster": [
+        {
+            "id": "pockitcluster",
+            "parameters": {
+                "domain": "{{ dns_search }}",
+                "gateway": "{{ cluster_gateway }}",
+                "internal_vip": null,
+                "external_vip": null,
+                "provision": {
+                    "contrail": {
+                        "kernel_upgrade": true,
+                        "zookeeper_ip_list": ["172.16.80.50","172.16.80.51","172.16.80.52"],
+                        "analytics": {
+                            "data_ttl": 168
+                        },
+                        "config": {
+                            "use_certs": false
+                        },
+                        "control": {
+                            "encapsulation_priority": "MPLSoUDP,MPLSoGRE,VXLAN",
+                            "external_bgp": "",
+                            "router_asn": {{ contrail_asn }}
+                        },
+                        "database": {
+                            "directory": "/var/lib/cassandra",
+                            "minimum_diskGB": {{ cassandra_db_size }}
+                        },
+                        "ha": {
+                            "haproxy_flag": true,
+                            "contrail_internal_vip": "{{ contrail_int_vip }}",
+                            "contrail_external_vip": "{{ contrail_ext_vip }}",
+                            "internal_virtual_router_id": 150,
+                            "external_virtual_router_id": 160
+                            }
+                    },
+                    "openstack": {
+                        "enable_ceilometer": false,
+                        "keystone": {
+                            "admin_password": "{{ openstack_password }}",
+                            "admin_tenant": "admin",
+                            "admin_user": "admin",
+                            "auth_port": 35357,
+                            "auth_protocol": "http",
+                            "service_tenant": "services"
+                        },
+                        "heat": {
+                            "encryption_key": "989C5C9E9F024A91"
+                        },             
+                        "multi_tenancy": true,
+                        "mysql": {
+                            "root_password": "{{ mysql_password }}"
+                        },
+                        "neutron": {
+                            "shared_secret": ""
+                        },
+                        "openstack_manage_amqp": false
+                    }
+                },
+                "subnet_mask": "{{ cluster_netmask }}"
+            }
+        }
+    ]
+}
